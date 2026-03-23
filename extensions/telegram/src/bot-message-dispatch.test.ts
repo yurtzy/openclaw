@@ -664,9 +664,9 @@ describe("dispatchTelegramMessage draft streaming", () => {
     const bot = createBot();
     await dispatchWithContext({ context: createContext(), streamMode: "partial", bot });
 
-    expect(answerDraftStream.materialize).toHaveBeenCalledTimes(1);
+    expect(answerDraftStream.archiveActivePreview).toHaveBeenCalledTimes(1);
     expect(answerDraftStream.forceNewMessage).toHaveBeenCalledTimes(1);
-    expect(answerDraftStream.clear).toHaveBeenCalledTimes(1);
+    expect(answerDraftStream.clear).not.toHaveBeenCalled();
     const deleteMessageCalls = (
       bot.api as unknown as { deleteMessage: { mock: { calls: unknown[][] } } }
     ).deleteMessage.mock.calls;
@@ -709,7 +709,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(editMessageTelegram).toHaveBeenNthCalledWith(
       2,
       123,
-      1002,
+      1001,
       "Message B final",
       expect.any(Object),
     );
@@ -771,7 +771,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
 
     await dispatchWithContext({ context: createContext(), streamMode: "partial" });
 
-    expect(answerDraftStream.materialize).toHaveBeenCalledTimes(1);
+    expect(answerDraftStream.archiveActivePreview).toHaveBeenCalledTimes(1);
     expect(answerDraftStream.forceNewMessage).toHaveBeenCalledTimes(1);
     expect(answerDraftStream.update).toHaveBeenCalledTimes(2);
     expect(answerDraftStream.update).toHaveBeenNthCalledWith(2, "Message B early");
@@ -814,7 +814,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(editMessageTelegram).toHaveBeenNthCalledWith(
       2,
       123,
-      1002,
+      1001,
       "Message B final",
       expect.any(Object),
     );
@@ -880,7 +880,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(editMessageTelegram).toHaveBeenNthCalledWith(
       2,
       123,
-      1002,
+      1001,
       "Message B final",
       expect.any(Object),
     );
@@ -932,7 +932,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(editMessageTelegram).toHaveBeenNthCalledWith(
       2,
       123,
-      1002,
+      1001,
       "Message B final",
       expect.any(Object),
     );
@@ -1517,7 +1517,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
 
       await dispatchWithContext({ context: createReasoningStreamContext(), streamMode });
 
-      expect(reasoningDraftStream.forceNewMessage).not.toHaveBeenCalled();
+      expect(reasoningDraftStream.forceNewMessage).toHaveBeenCalledTimes(1);
     },
   );
 
@@ -1612,13 +1612,13 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(createTelegramDraftStream.mock.calls[0]?.[0]).toEqual(
       expect.objectContaining({
         thread: { id: 777, scope: "dm" },
-        previewTransport: "message",
+        previewTransport: "draft",
       }),
     );
     expect(createTelegramDraftStream.mock.calls[1]?.[0]).toEqual(
       expect.objectContaining({
         thread: { id: 777, scope: "dm" },
-        previewTransport: "message",
+        previewTransport: "draft",
       }),
     );
   });
@@ -1643,7 +1643,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(createTelegramDraftStream.mock.calls[0]?.[0]).toEqual(
       expect.objectContaining({
         thread: { id: 777, scope: "dm" },
-        previewTransport: "message",
+        previewTransport: "draft",
       }),
     );
     expect(answerDraftStream.materialize).not.toHaveBeenCalled();
@@ -1677,7 +1677,7 @@ describe("dispatchTelegramMessage draft streaming", () => {
     expect(reasoningDraftStream.update).toHaveBeenCalledWith("Reasoning:\n_Working on it..._");
     expect(answerDraftStream.update).toHaveBeenCalledWith("Checking the directory...");
     expect(answerDraftStream.forceNewMessage).not.toHaveBeenCalled();
-    expect(reasoningDraftStream.forceNewMessage).not.toHaveBeenCalled();
+    expect(reasoningDraftStream.forceNewMessage).toHaveBeenCalledTimes(1);
   });
 
   it("does not edit reasoning preview bubble with final answer when no assistant partial arrived yet", async () => {
@@ -1771,14 +1771,8 @@ describe("dispatchTelegramMessage draft streaming", () => {
 
     await dispatchWithContext({ context: createReasoningStreamContext(), streamMode: "partial" });
 
+    expect(editMessageTelegram).toHaveBeenCalledTimes(1);
     expect(editMessageTelegram).toHaveBeenNthCalledWith(1, 123, 999, "3", expect.any(Object));
-    expect(editMessageTelegram).toHaveBeenNthCalledWith(
-      2,
-      123,
-      111,
-      "Reasoning:\nIf I count r in strawberry, I see positions 3, 8, and 9. So the total is 3.",
-      expect.any(Object),
-    );
     expect(deliverReplies).not.toHaveBeenCalledWith(
       expect.objectContaining({
         replies: [

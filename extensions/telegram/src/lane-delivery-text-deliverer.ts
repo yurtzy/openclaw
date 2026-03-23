@@ -450,8 +450,13 @@ export function createLaneTextDeliverer(params: CreateLaneTextDelivererParams) {
     const lane = params.lanes[laneName];
     const reply = resolveSendableOutboundReplyParts(payload, { text });
     const hasMedia = reply.hasMedia;
+    const hasPreviewButtons = Boolean(previewButtons && previewButtons.length > 0);
     const canEditViaPreview =
-      !hasMedia && text.length > 0 && text.length <= params.draftMaxChars && !payload.isError;
+      !hasMedia &&
+      !hasPreviewButtons &&
+      text.length > 0 &&
+      text.length <= params.draftMaxChars &&
+      !payload.isError;
 
     if (infoKind === "final") {
       // Transient previews must decide cleanup retention per final attempt.

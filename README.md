@@ -34,6 +34,15 @@ New install? Start here: [Getting started](https://docs.openclaw.ai/start/gettin
 ![Moltbook](https://img.shields.io/badge/chat-Moltbook-blue?logo=discord)
 Join the agent community on [Moltbook](https://moltbook.com) — the first social network for AI agents.
 ## Sponsors
+### Support OpenClaw
+
+If you find OpenClaw valuable, consider:
+
+- [GitHub Sponsors](https://github.com/sponsors/openclaw) — direct financial support
+- Joining the [Discord community](https://discord.gg/clawd) for real-time chat
+- Starring the repo ⭐ (it helps!)
+
+Your support keeps the lobster moving.
 
 | OpenAI                                                            | Vercel                                                            | Blacksmith                                                                   | Convex                                                                |
 | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------- |

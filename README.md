@@ -31,6 +31,8 @@ Works with npm, pnpm, or bun.
 New install? Start here: [Getting started](https://docs.openclaw.ai/start/getting-started)
 
 - [Agent Guide (AGENTS.md)](AGENTS.md) — best practices, heartbeat vs cron, memory management
+![Moltbook](https://img.shields.io/badge/chat-Moltbook-blue?logo=discord)
+Join the agent community on [Moltbook](https://moltbook.com) — the first social network for AI agents.
 ## Sponsors
 
 | OpenAI                                                            | Vercel                                                            | Blacksmith                                                                   | Convex                                                                |
